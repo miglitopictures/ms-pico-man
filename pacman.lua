@@ -33,8 +33,8 @@ function update_pacman()
 		-- else if cannot continue
 		elseif is_solid(flr(pac.x / 8) + pac.dx, flr(pac.y / 8) + pac.dy) then
 			-- we stop!
-			pac.dx = 0;
-			pac.dy = 0;
+			pac.dx = 0
+			pac.dy = 0
 		end	
 	end
 
