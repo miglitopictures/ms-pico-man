@@ -155,8 +155,8 @@ function update_target(ghost)
 	
 	-- pinky goes to where he thinks pacman will be after 4 moves
 	elseif ghost.name == "pinky" then
-	 	tx = pac.x+4 + (pac.lastmove[1]*8) * 4
-		ty = pac.y+4 + (pac.lastmove[2]*8) * 4
+	 	tx = pac.x+4 + (pac.dx*8) * 4
+		ty = pac.y+4 + (pac.dy*8) * 4
 
 	-- clyde goes directly towards pacman,
 	-- but gets scared and scatters when he gets too close
@@ -169,8 +169,8 @@ function update_target(ghost)
 		end
 	-- pinky goes to where he thinks pacman will be after 2 moves
 	elseif ghost.name == "inky" then
-		tx = pac.x+4 + (pac.lastmove[1]*8) * 2
-		ty = pac.y+4 + (pac.lastmove[2]*8) * 2	
+		tx = pac.x+4 + (pac.dx*8) * 2
+		ty = pac.y+4 + (pac.dy*8) * 2	
 	end
 	
 	-- update the target
