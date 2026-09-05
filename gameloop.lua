@@ -1,0 +1,30 @@
+function _init()
+	init_pacman(7*8,14*8)
+
+	init_ghost(ghosts[1],7*8,7*8)
+	init_ghost(ghosts[2],8*8,7*8)
+ init_ghost(ghosts[3],7*8,7*8)
+ init_ghost(ghosts[4],8*8,7*8)
+end
+
+function _update()
+	update_pacman()
+	update_ghost(ghosts[1])
+	update_ghost(ghosts[2])
+	update_ghost(ghosts[3])
+	update_ghost(ghosts[4])
+end
+
+function _draw()
+	cls()
+	map()
+	
+	draw_pacman()
+	
+	draw_ghost(ghosts[1])
+	draw_ghost(ghosts[2])
+	draw_ghost(ghosts[3])
+	draw_ghost(ghosts[4])
+	
+	
+end
