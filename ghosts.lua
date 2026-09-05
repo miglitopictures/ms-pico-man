@@ -19,7 +19,7 @@ function init_ghost(ghost, x, y)
 	ghost.x = x
 	ghost.y = y
 
-	-- set inital possible move sets
+	-- set inital possible moves set
 	ghost.available={}
 
 	-- best and last move vectors
