@@ -1,6 +1,7 @@
 -- pacman --
 
 
+-- creates the pacman table
 function init_pacman(x,y)
 	pac = {
 		x=x,

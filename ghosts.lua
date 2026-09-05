@@ -1,9 +1,11 @@
 -- ghosts --
 
-moves = {{0 ,-1}, --up
-         {-1, 0}, --left
-         {0 , 1}, --down
-         {1 , 0}} --right
+moves = {
+    {0 ,-1}, --up
+    {-1, 0}, --left
+    {0 , 1}, --down
+    {1 , 0}  --right
+} 
 
 ghosts = {
     {name = "blinky"}, --red
@@ -14,14 +16,14 @@ ghosts = {
 }
 
 function init_ghost(ghost, x, y)
- ghost.x = x
- ghost.y = y
- ghost.available={}
- ghost.best={0,0}
- ghost.lastmove={0,0}
- ghost.moving = false
- ghost.dist_2_move=7
- ghost.target={x=rnd(128),y=rnd(128)}
+	ghost.x = x
+	ghost.y = y
+	ghost.available={}
+	ghost.best={0,0}
+	ghost.lastmove={0,0}
+	ghost.moving = false
+	ghost.dist_2_move=7
+	ghost.target={x=rnd(128),y=rnd(128)}
 	local name = ghost.name
 	local sp = 16
 	local c=4
@@ -47,19 +49,19 @@ function update_ghost(ghost)
 		move_ghost(ghost)
 	else
 		move_ghost(ghost)
- end
+	end
 end
 
 --drawing ghosts
 
 function draw_ghost(ghost)
- local x = ghost.x
- local y = ghost.y
- 
- --rectfill(x,y,x+7,y+7,ghost.c)
- spr(ghost.sp,x,y)
+	local x = ghost.x
+	local y = ghost.y
+	
+	--rectfill(x,y,x+7,y+7,ghost.c)
+	spr(ghost.sp,x,y)
 
---drawing ghosts debug
+	--drawing ghosts debug
 
 	for dir in all(ghost.available) do
 		pset(x+4+dir[1]*8,y+4+dir[2]*8,8)
@@ -81,18 +83,18 @@ function possible_moves(entity)
 	
 	for dir in all(moves) do
 	   
-	 local is_back = (dir[1] == bx and dir[2] == by)
-	 
-	 --checando porque os fantasmas
-	 --nao viram de costas
-	 
-	 if not is_back then
-	  local nx = flr((entity.x + 4) / 8) + dir[1]
-	  local ny = flr((entity.y + 4) / 8) + dir[2]
-	  if not is_solid(nx, ny) then
-	   add(possible, dir)
-	  end
-	 end
+		local is_back = (dir[1] == bx and dir[2] == by)
+		
+		--checando porque os fantasmas
+		--nao viram de costas
+		
+		if not is_back then
+			local nx = flr((entity.x + 4) / 8) + dir[1]
+			local ny = flr((entity.y + 4) / 8) + dir[2]
+			if not is_solid(nx, ny) then
+				add(possible, dir)
+			end
+		end
 	 
 	end
 	
@@ -121,22 +123,22 @@ function best_move(entity)
 	local chosen = nil
 
 	for dir in all(entity.available) do
-	  local nx = (entity.x+4) + dir[1]*8
-	  local ny = (entity.y+4) + dir[2]*8
-	  local d = dist({x=nx, y=ny}, entity.target)
-	  if d < smallest_dist then
-	    smallest_dist = d
-	    chosen = dir
-	  end
+		local nx = (entity.x+4) + dir[1]*8
+		local ny = (entity.y+4) + dir[2]*8
+		local d = dist({x=nx, y=ny}, entity.target)
+		if d < smallest_dist then
+			smallest_dist = d
+			chosen = dir
+		end
 	end
 	
 	return chosen
 end
 
 function dist(p1, p2)
-  local dx = p1.x - p2.x
-  local dy = p1.y - p2.y
-  return sqrt(dx*dx + dy*dy)
+	local dx = p1.x - p2.x
+	local dy = p1.y - p2.y
+	return sqrt(dx*dx + dy*dy)
 end
 
 --pacman's target for each ghost
@@ -149,10 +151,10 @@ function update_target(ghost)
 		tx = pac.x+4
 		ty = pac.y+4
 	elseif ghost.name == "pinky" then
-	 tx = pac.x+4 + (pac.lastmove[1]*8)*4
+	 	tx = pac.x+4 + (pac.lastmove[1]*8)*4
 		ty = pac.y+4 + (pac.lastmove[2]*8)*4
 	elseif ghost.name == "clyde" then
-	 tx = pac.x+4
+	 	tx = pac.x+4
 		ty = pac.y+4
 		if dist(ghost,pac) < 32 then
 			tx=ghost.scatter.x

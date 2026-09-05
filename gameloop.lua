@@ -3,8 +3,8 @@ function _init()
 
 	init_ghost(ghosts[1],7*8,7*8)
 	init_ghost(ghosts[2],8*8,7*8)
- init_ghost(ghosts[3],7*8,7*8)
- init_ghost(ghosts[4],8*8,7*8)
+	init_ghost(ghosts[3],7*8,7*8)
+	init_ghost(ghosts[4],8*8,7*8)
 end
 
 function _update()
