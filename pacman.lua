@@ -5,10 +5,11 @@ function init_pacman(x,y)
 	pac = {
 		x = x,
 		y = y,
+		isdead = false,
 		sp = 2,
 		dx = 1,
 		dy = 0,
-		desired = {0,-1},
+		desired = {1,0},
 	}
 end
 -- updates pacman position
@@ -21,7 +22,13 @@ function update_pacman()
 		mset(pcellx, pcelly, 0)
 		sfx(0) -- needs sound design
 	elseif is(pcellx, pcelly, bigdot) then
-		points += 100
+		points += 50
+		for g in all(ghosts) do
+			if g.state != states.eaten then 
+				g.state = states.scared
+				g.sp = 24
+			end
+		end
 		mset(pcellx, pcelly, 0)
 		sfx(1) -- needs sound design
 	end
