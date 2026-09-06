@@ -9,21 +9,23 @@
 - [x] movimento linear ininterrupto pacman
 - [x] colisão pacman nas paredes
 - [x] transportar pelas laterais
+- [x] comer dots *(pequeno->10pts e grande->50pts+frightened mode)*
+- [x] vidas *(são 3)*
+- [x] morte pacman
+- [x] colisão pacman e fantasmas
+- [x] score
 
-
-## o que falta?
-
-- [ ] comer dots *(pequeno->10pts e grande->50pts+frightened mode)*
-- [ ] fruta *(aparece 2x na partida, embaixo da casa dos fantasmas, primeiro depois de comer 70 dots e de novo, 170 dots; desaparece depois de 9-10 segs)*
-- [ ] colisão pacman e fantasmas
-- [ ] morte pacman
+## precisa revisar, mas tem o mvp
 - [ ] ghosts states (normal=chase, scatter, frightened=random, eaten/dead=eyes)
 	- [ ] frightened mode fantasmas *(depois do pellet grande)*
 	- [ ] poder comer os fantasmas frightened
-- [ ] vidas *(são 3)*
-- [ ] score e high score
+
+## o que falta?
+
+- [ ] fruta *(aparece 2x na partida, embaixo da casa dos fantasmas, primeiro depois de comer 70 dots e de novo, 170 dots; desaparece depois de 9-10 segs)*
 - [ ] velocidade fracionada
 - [ ] progressão de dificuldade/velocidade
+- [ ] high score
 
 
 ### extra:
@@ -32,9 +34,9 @@
 
 ## gráfico:
 
-- [ ] desenhar frutas
+- [x] desenhar frutas
 - [x] desenho dos fantasmas scatter
-- [ ] sprite só olhinhos qnd fantasmas morrem (testar com transparência)
+- [x] sprite só olhinhos qnd fantasmas morrem (testar com transparência)
 - [ ] animação dos sprites 
 	- [x] pacman andando
 	- [x] fantasmas andando (loop pernas)
