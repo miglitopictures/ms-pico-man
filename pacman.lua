@@ -23,7 +23,12 @@ function update_pacman()
 		sfx(0) -- needs sound design
 	elseif is(pcellx, pcelly, bigdot) then
 		points += 100
-		ghosts.state = states.scared
+		for g in all(ghosts) do
+			if g.state != states.eaten then 
+				g.state = states.scared
+				g.sp = 24
+			end
+		end
 		mset(pcellx, pcelly, 0)
 		sfx(1) -- needs sound design
 	end

@@ -9,12 +9,13 @@ directions = {
 states = {
 	chase = 0,
 	scatter = 1,
-	scared = 2 -- frightened
+	scared = 2, -- frightened
+	eaten = 3, -- frightened
 }
 
+
+home = { x = 63, y = 63}
 ghosts = {
-	state = states.chase,
-	home = { x = 63, y = 63},
     {name = "blinky", sp = 16, scatter = {x=0,y=0}}, -- red
     {name = "pinky",  sp = 16, scatter = {x=0,y=128}}, -- pink
     {name = "inky",   sp = 16, scatter = {x=128,y=128}}, -- blue
@@ -26,18 +27,22 @@ function init_ghost(ghost, x, y)
 	-- set inital position
 	ghost.x = x
 	ghost.y = y
-
+	
 	-- set inital possible moves set
 	ghost.available={}
-
+	
 	-- set initial eaten flag (main state, over global ghost state)
 	ghost.iseaten = false
-
+	ghost.state = states.chase
+	
 	-- best and last move vectors
 	ghost.best={0,0}
 	ghost.lastmove={0,0}
-
+	
 	ghost.move_counter=8
+	
+	ghost.scatter_timer = 5 * 30 -- 5 seconds
+	ghost.scared_timer = 10 * 30 -- 10 seconds
 
 	-- setup starting target
 	ghost.target={x=rnd(128),y=rnd(128)}
@@ -53,37 +58,53 @@ function init_ghost(ghost, x, y)
 	ghost.c = c
 end
 
---update ghosts every frame
+-- update ghosts every frame
 function update_ghost(ghost)
-
-	--check if colides with pacman
-	if dist(ghost, pac) <  4 then
-		if ghosts.states == states.scared then 
-			ghost.iseaten = true
+	-- scared timer
+	if ghost.state == states.scared then
+		if ghost.scared_timer <= 0 then
+			ghost.state = states.chase
+			ghost.sp = 16
+			ghost.scared_timer = 10 * 30 -- 10 seconds;
 		else
-			pac.hp -= 1
+			ghost.scared_timer -= 1
 		end
 	end
 	
+
+	-- collisions
+	if ghost.state == states.eaten then
+		if dist(ghost, home) <=  4 then 
+			ghost.state = states.chase
+		end
+	else
+		-- collided with pacman
+		if dist(ghost, pac) <  4 then
+			if ghost.state == states.scared then 
+				ghost.state = states.eaten
+				ghost.sp = 16
+			else
+				pac.hp -= 1
+			end
+		end
+	end
+
+	-- calculate movement
 	-- if ghost can change direction
 	if ghost.move_counter == 0 then
 		-- update possible moves
 		ghost.available = possible_moves(ghost)
 		
-
-		if ghost.iseaten then
-			ghost.target = ghosts.home
-			ghost.best = best_move(ghost)
-		end
-
-		if ghosts.state == states.scared then
+		if ghost.state == states.scared then
 			--pick random direction
 			ghost.best = rnd(ghost.available)
 		else
 			-- move towards A target
-			if ghosts.state == states.chase then
+			if ghost.state == states.eaten then
+				ghost.target = home
+			elseif ghost.state == states.chase then
 				update_target(ghost) -- pacman is target
-			elseif ghosts.state == states.scatter then
+			elseif ghost.state == states.scatter then
 				ghost.target = ghost.scatter -- go to scatter point
 			end
 			-- update best move acording to target
@@ -217,15 +238,16 @@ end
 --drawing ghosts (and their debug graphics)
 function draw_ghost(ghost)
 
-	if ghost.iseaten then
-		palt(2, true) -- change base to ghost color
-		spr(sp,ghost.x,ghost.y)
-		palt() -- reset pallete
-	end
 	-- ghost sprite
-	pal(2, ghost.c) -- change base to ghost color
-	spr(sp,ghost.x,ghost.y)
-	pal() -- reset pallete
+	if ghost.state == states.eaten then
+		palt(2, true) -- change base to ghost color
+		spr(ghost.sp,ghost.x,ghost.y)
+		palt() -- reset pallete
+	else
+		pal(2, ghost.c) -- change base to ghost color
+		spr(ghost.sp,ghost.x,ghost.y)
+		pal() -- reset pallete
+	end
 	
 	-- debug
 	-- show all availavle directions
