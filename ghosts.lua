@@ -6,7 +6,15 @@ directions = {
     {1 , 0}  -- right
 } 
 
+states = {
+	chase = 0,
+	scatter = 1,
+	scared = 2 -- frightened
+}
+
 ghosts = {
+	state = states.chase,
+	home = { x = 63, y = 63},
     {name = "blinky", sp = 16, scatter = {x=0,y=0}}, -- red
     {name = "pinky",  sp = 16, scatter = {x=0,y=128}}, -- pink
     {name = "inky",   sp = 16, scatter = {x=128,y=128}}, -- blue
@@ -21,6 +29,9 @@ function init_ghost(ghost, x, y)
 
 	-- set inital possible moves set
 	ghost.available={}
+
+	-- set initial eaten flag (main state, over global ghost state)
+	ghost.iseaten = false
 
 	-- best and last move vectors
 	ghost.best={0,0}
@@ -46,14 +57,31 @@ end
 function update_ghost(ghost)
 	
 	-- if ghost can change direction
-	if ghost.move_counter == 0 do
+	if ghost.move_counter == 0 then
 		-- update possible moves
 		ghost.available = possible_moves(ghost)
 		
-		update_target(ghost)
 
-		-- update best move acording to target
-		ghost.best = best_move(ghost)
+		-- if ghost.iseaten then
+		-- 	ghost.target = ghosts.home
+		-- 	ghost.best = best_move(ghost)
+		-- end
+
+		if ghosts.state == states.scared then
+			--pick random direction
+			ghost.best = rnd(ghost.available)
+		else
+			-- move towards A target
+			if ghosts.state == states.chase then
+				update_target(ghost) -- pacman is target
+			elseif ghosts.state == states.scatter then
+				ghost.target = ghost.scatter -- go to scatter point
+			end
+			-- update best move acording to target
+			ghost.best = best_move(ghost)
+		end
+
+		
 		-- reset counter
 		ghost.move_counter = 8
 	end
