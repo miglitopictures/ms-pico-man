@@ -23,11 +23,11 @@ function _draw()
 	map() -- draw map
 	
 	-- draw entities
-	draw_pacman()
 	draw_ghost(ghosts[1])
 	draw_ghost(ghosts[2])
 	draw_ghost(ghosts[3])
 	draw_ghost(ghosts[4])
+	draw_pacman()
 
 	-- draw points
 	print("\^o0ffpoints: " ..points) 
