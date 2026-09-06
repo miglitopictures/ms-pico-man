@@ -8,9 +8,9 @@ directions = {
 
 ghosts = {
     {name = "blinky", sp = 16, scatter = {x=0,y=0}}, -- red
-    {name = "pinky",  sp = 32, scatter = {x=0,y=128}}, -- pink
-    {name = "inky",   sp = 48, scatter = {x=128,y=128}}, -- blue
-    {name = "clyde",  sp = 21, scatter = {x=128,y=0}}  -- orange
+    {name = "pinky",  sp = 16, scatter = {x=0,y=128}}, -- pink
+    {name = "inky",   sp = 16, scatter = {x=128,y=128}}, -- blue
+    {name = "clyde",  sp = 16, scatter = {x=128,y=0}}  -- orange
 }
 
 -- sets up the ghost entity in specified coordinate --
@@ -180,8 +180,10 @@ end
 --drawing ghosts (and their debug graphics)
 function draw_ghost(ghost)
 	-- ghost sprite
+	pal(2, ghost.c) -- change base to ghost color
 	spr(ghost.sp,ghost.x,ghost.y)
-
+	pal() -- reset pallete
+	
 	-- debug
 	-- show all availavle directions
 	for dir in all(ghost.available) do
