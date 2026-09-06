@@ -26,6 +26,7 @@ function update_pacman()
 		for g in all(ghosts) do
 			if g.state != states.eaten then 
 				g.state = states.scared
+				g.scared_timer = 10 * 30 -- 10 seconds;
 				g.sp = 24
 			end
 		end

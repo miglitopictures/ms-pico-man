@@ -12,9 +12,10 @@ function reload_map()
 	reload(0x2000, 0x2000, 0x2000)
 	-- https://pico-8.fandom.com/wiki/Reload
 end
+
 function _init()
 	-- reload map data
-	reload_map()
+	-- reload_map()
 	-- init entities
 	init_pacman(7*8,14*8)
 	init_ghost(ghosts[1],7*8,7*8)

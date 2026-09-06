@@ -66,7 +66,6 @@ function update_ghost(ghost)
 		if ghost.scared_timer <= 0 then
 			ghost.state = states.chase
 			ghost.sp = 16
-			ghost.scared_timer = 10 * 30 -- 10 seconds;
 		else
 			ghost.scared_timer -= 1
 		end
