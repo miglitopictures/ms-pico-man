@@ -16,10 +16,10 @@ states = {
 
 home = { x = 63, y = 63}
 ghosts = {
-    {name = "blinky", sp = 16, scatter = {x=0,y=0}}, -- red
-    {name = "pinky",  sp = 16, scatter = {x=0,y=128}}, -- pink
-    {name = "inky",   sp = 16, scatter = {x=128,y=128}}, -- blue
-    {name = "clyde",  sp = 16, scatter = {x=128,y=0}}  -- orange
+    {name = "blinky", scatter = {x=0,y=0}}, -- red
+    {name = "pinky",  scatter = {x=0,y=128}}, -- pink
+    {name = "inky",   scatter = {x=128,y=128}}, -- blue
+    {name = "clyde",  scatter = {x=128,y=0}}  -- orange
 }
 
 -- sets up the ghost entity in specified coordinate --
@@ -34,6 +34,7 @@ function init_ghost(ghost, x, y)
 	-- set initial eaten flag (main state, over global ghost state)
 	ghost.iseaten = false
 	ghost.state = states.chase
+	ghost.sp = 16
 	
 	-- best and last move vectors
 	ghost.best={0,0}
@@ -79,12 +80,13 @@ function update_ghost(ghost)
 		end
 	else
 		-- collided with pacman
-		if dist(ghost, pac) <  4 then
+		if (not pac.isdead) and (dist(ghost, pac) <  4) then
 			if ghost.state == states.scared then 
 				ghost.state = states.eaten
 				ghost.sp = 16
 			else
-				pac.hp -= 1
+				hp -= 1
+				pac.isdead = true
 			end
 		end
 	end
