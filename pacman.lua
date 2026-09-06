@@ -19,9 +19,11 @@ function update_pacman()
 	if is(pcellx, pcelly, dot) then
 		points += 10
 		mset(pcellx, pcelly, 0)
+		sfx(0) -- needs sound design
 	elseif is(pcellx, pcelly, bigdot) then
 		points += 100
 		mset(pcellx, pcelly, 0)
+		sfx(1) -- needs sound design
 	end
 
 	-- can move if is on the grid
