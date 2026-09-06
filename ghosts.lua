@@ -55,6 +55,15 @@ end
 
 --update ghosts every frame
 function update_ghost(ghost)
+
+	--check if colides with pacman
+	if dist(ghost, pac) <  4 then
+		if ghosts.states == states.scared then 
+			ghost.iseaten = true
+		else
+			pac.hp -= 1
+		end
+	end
 	
 	-- if ghost can change direction
 	if ghost.move_counter == 0 then
@@ -62,10 +71,10 @@ function update_ghost(ghost)
 		ghost.available = possible_moves(ghost)
 		
 
-		-- if ghost.iseaten then
-		-- 	ghost.target = ghosts.home
-		-- 	ghost.best = best_move(ghost)
-		-- end
+		if ghost.iseaten then
+			ghost.target = ghosts.home
+			ghost.best = best_move(ghost)
+		end
 
 		if ghosts.state == states.scared then
 			--pick random direction
@@ -207,9 +216,15 @@ end
 
 --drawing ghosts (and their debug graphics)
 function draw_ghost(ghost)
+
+	if ghost.iseaten then
+		palt(2, true) -- change base to ghost color
+		spr(sp,ghost.x,ghost.y)
+		palt() -- reset pallete
+	end
 	-- ghost sprite
 	pal(2, ghost.c) -- change base to ghost color
-	spr(ghost.sp,ghost.x,ghost.y)
+	spr(sp,ghost.x,ghost.y)
 	pal() -- reset pallete
 	
 	-- debug

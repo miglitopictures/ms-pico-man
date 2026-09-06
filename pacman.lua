@@ -5,6 +5,7 @@ function init_pacman(x,y)
 	pac = {
 		x = x,
 		y = y,
+		hp = 100,
 		sp = 2,
 		dx = 1,
 		dy = 0,

@@ -30,5 +30,6 @@ function _draw()
 	draw_ghost(ghosts[4])
 
 	-- draw points
-	print("\^o0ffpoints: " ..points, 0, 0, 7) 
+	print("\^o0ffpoints: " ..points) 
+	print("\^o0ffhp: " ..pac.hp) 
 end
