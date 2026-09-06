@@ -1,3 +1,5 @@
+points = 0
+
 function _init()
 	-- init entities
 	init_pacman(7*8,14*8)
@@ -26,4 +28,7 @@ function _draw()
 	draw_ghost(ghosts[2])
 	draw_ghost(ghosts[3])
 	draw_ghost(ghosts[4])
+
+	-- draw points
+	print("\^o0ffpoints: " ..points, 0, 0, 7) 
 end

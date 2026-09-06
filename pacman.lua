@@ -11,9 +11,20 @@ function init_pacman(x,y)
 		desired = {0,-1},
 	}
 end
-
 -- updates pacman position
 function update_pacman()
+	-- check collision
+	pcellx = flr((pac.x+4)/8)
+	pcelly = flr((pac.y+4)/8)
+	if is(pcellx, pcelly, dot) then
+		points += 10
+		mset(pcellx, pcelly, 0)
+		sfx(0) -- needs sound design
+	elseif is(pcellx, pcelly, bigdot) then
+		points += 100
+		mset(pcellx, pcelly, 0)
+		sfx(1) -- needs sound design
+	end
 
 	-- can move if is on the grid
 	local canmove = (pac.x + pac.y) % 8 == 0
