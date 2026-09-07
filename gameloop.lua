@@ -23,7 +23,7 @@ function _init()
 	-- reload_map()
 	-- init entities
 	init_pacman(7*8,14*8)
-	init_ghost(ghosts[1],7*8,7*8)
+	init_ghost(ghosts[1],9*8,6*8)
 	init_ghost(ghosts[2],8*8,7*8)
 	init_ghost(ghosts[3],7*8,7*8)
 	init_ghost(ghosts[4],8*8,7*8)

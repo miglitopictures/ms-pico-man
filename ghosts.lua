@@ -68,6 +68,8 @@ function update_ghost(ghost)
 			else
 				hp -= 1
 				pac.isdead = true
+				pac.fliph = false
+				pac.flipv = false
 			end
 		end
 	end

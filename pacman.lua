@@ -7,6 +7,7 @@ function init_pacman(x,y)
 		y = y,
 		isdead = false,
 		anim_timer = 0,
+		base_frame = 0,
 		fliph = false,
 		flipv = false,
 		sp = 2,
@@ -70,27 +71,30 @@ function update_pacman()
 end
 
 function animate_pacman()
-	local  base_frame = 1
 	if pac.dx == 1 then -- right
-		base_frame = 1
+		pac.base_frame = 1
 		pac.fliph = false
+		pac.flipv = false
 		pac.anim_timer += 0.4
 	elseif pac.dx == -1 then -- left
-		base_frame = 1
+		pac.base_frame = 1
 		pac.fliph = true
+		pac.flipv = false
 		pac.anim_timer += 0.4
 	elseif pac.dy == 1 then -- down
-		base_frame = 4
+		pac.base_frame = 4
+		pac.fliph = false
 		pac.flipv = true
 		pac.anim_timer += 0.4
 	elseif pac.dy == -1 then -- up
-		base_frame = 4
+		pac.base_frame = 4
+		pac.fliph = false
 		pac.flipv = false
 		pac.anim_timer += 0.4
 	else 
 		pac.anim_timer = 1
 	end
-	pac.sp = base_frame + (pac.anim_timer % 3)
+	pac.sp = pac.base_frame + (pac.anim_timer % 3)
 end
 
 function draw_pacman()
