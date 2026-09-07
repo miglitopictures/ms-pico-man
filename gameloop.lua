@@ -7,6 +7,11 @@ gm = {
 }
 gamestate = gm.playing
 
+-- current_level=1
+-- levels={
+-- 	{}
+-- }
+
 function reload_map()
 	-- for a 128x128-tile map that can use all 256 sprite tiles
 	reload(0x2000, 0x2000, 0x2000)
@@ -30,10 +35,23 @@ function _update()
 		
 		if not pac.isdead then
 			update_pacman()
-			update_ghost(ghosts[1])
-			update_ghost(ghosts[2])
-			update_ghost(ghosts[3])
-			update_ghost(ghosts[4])
+			
+			-- scared timer
+			if allscared then
+				if scared_timer <= 0 then
+					allscared = false
+					for g in all(ghosts) do
+						g.sp = 16;
+					end
+				else
+					scared_timer -= 1
+				end
+			end
+
+			for g in all(ghosts) do
+				update_ghost(g)
+			end
+			
 		else 
 			-- play death animation
 			if death_anim < 13.9 then
@@ -75,4 +93,6 @@ function _draw()
 	-- draw points
 	print("\^o0ffpoints: " ..points) 
 	print("\^o0ffhp: " ..hp) 
+	print("\^o0ffglobalst: " ..global_state)
+	if allscared then print("\^o0ffallscared: ") end
 end

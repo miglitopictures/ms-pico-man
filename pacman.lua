@@ -24,9 +24,9 @@ function update_pacman()
 	elseif is(pcellx, pcelly, bigdot) then
 		points += 50
 		for g in all(ghosts) do
-			if g.state != states.eaten then 
-				g.state = states.scared
-				g.scared_timer = 10 * 30 -- 10 seconds;
+			if not g.iseaten then 
+				allscared = true
+				scared_timer = 10 * 30 -- 10 seconds;
 				g.sp = 24
 			end
 		end

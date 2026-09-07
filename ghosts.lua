@@ -6,20 +6,21 @@ directions = {
     {1 , 0}  -- right
 } 
 
-states = {
-	chase = 0,
-	scatter = 1,
-	scared = 2, -- frightened
-	eaten = 3, -- frightened
-}
 
+states = {
+	scatter = 0,
+	chase = 1,
+}
+global_state = states.chase
+allscared = false
+scared_timer = 10 * 30 -- 10 seconds
 
 home = { x = 63, y = 63}
 ghosts = {
-    {name = "blinky", scatter = {x=0,y=0}}, -- red
-    {name = "pinky",  scatter = {x=0,y=128}}, -- pink
-    {name = "inky",   scatter = {x=128,y=128}}, -- blue
-    {name = "clyde",  scatter = {x=128,y=0}}  -- orange
+    {name = "blinky", c=8, scatter = {x=0,y=0}}, -- red
+    {name = "pinky",  c=14,scatter = {x=0,y=128}}, -- pink
+    {name = "inky",   c=12,scatter = {x=128,y=128}}, -- blue
+    {name = "clyde",  c=9, scatter = {x=128,y=0}}  -- orange
 }
 
 -- sets up the ghost entity in specified coordinate --
@@ -33,7 +34,6 @@ function init_ghost(ghost, x, y)
 	
 	-- set initial eaten flag (main state, over global ghost state)
 	ghost.iseaten = false
-	ghost.state = states.chase
 	ghost.sp = 16
 	
 	-- best and last move vectors
@@ -42,46 +42,25 @@ function init_ghost(ghost, x, y)
 	
 	ghost.move_counter=8
 	
-	ghost.scatter_timer = 5 * 30 -- 5 seconds
-	ghost.scared_timer = 10 * 30 -- 10 seconds
 
 	-- setup starting target
-	ghost.target={x=rnd(128),y=rnd(128)}
-
-	-- setup debug color	
-	-- using local names for readability
-	local name = ghost.name
-	local c = 4
-	if name == "blinky" then c=8  end
-	if name == "pinky"  then c=14 end
-	if name == "inky"   then c=12 end
-	if name == "clyde"  then c=9  end
-	ghost.c = c
+	ghost.target=ghost.scatter
 end
 
 -- update ghosts every frame
 function update_ghost(ghost)
-	-- scared timer
-	if ghost.state == states.scared then
-		if ghost.scared_timer <= 0 then
-			ghost.state = states.chase
-			ghost.sp = 16
-		else
-			ghost.scared_timer -= 1
-		end
-	end
-	
+
 
 	-- collisions
-	if ghost.state == states.eaten then
+	if ghost.iseaten then
 		if dist(ghost, home) <=  4 then 
-			ghost.state = states.chase
+			ghost.iseaten = false
 		end
 	else
 		-- collided with pacman
 		if (not pac.isdead) and (dist(ghost, pac) <  4) then
-			if ghost.state == states.scared then 
-				ghost.state = states.eaten
+			if allscared then 
+				ghost.iseaten = true
 				ghost.sp = 16
 			else
 				hp -= 1
@@ -95,17 +74,19 @@ function update_ghost(ghost)
 	if ghost.move_counter == 0 then
 		-- update possible moves
 		ghost.available = possible_moves(ghost)
+
 		
-		if ghost.state == states.scared then
+		
+		if allscared then
 			--pick random direction
 			ghost.best = rnd(ghost.available)
 		else
 			-- move towards A target
-			if ghost.state == states.eaten then
+			if ghost.iseaten then
 				ghost.target = home
-			elseif ghost.state == states.chase then
+			elseif global_state == states.chase then
 				update_target(ghost) -- pacman is target
-			elseif ghost.state == states.scatter then
+			elseif global_state == states.scatter then
 				ghost.target = ghost.scatter -- go to scatter point
 			end
 			-- update best move acording to target
@@ -240,7 +221,7 @@ end
 function draw_ghost(ghost)
 
 	-- ghost sprite
-	if ghost.state == states.eaten then
+	if ghost.iseaten then
 		palt(2, true) -- change base to ghost color
 		spr(ghost.sp,ghost.x,ghost.y)
 		palt() -- reset pallete
