@@ -34,13 +34,16 @@ function init_ghost(ghost, x, y)
 	
 	-- set initial eaten flag (main state, over global ghost state)
 	ghost.iseaten = false
-	ghost.sp = 16
+	ghost.isscared = false
 	
 	-- best and last move vectors
 	ghost.best={0,0}
 	ghost.lastmove={0,0}
 	
 	ghost.move_counter=8
+
+
+	ghost.anim_timer = 0;
 	
 
 	-- setup starting target
@@ -59,9 +62,9 @@ function update_ghost(ghost)
 	else
 		-- collided with pacman
 		if (not pac.isdead) and (dist(ghost, pac) <  4) then
-			if allscared then 
+			if ghost.isscared then 
 				ghost.iseaten = true
-				ghost.sp = 16
+				ghost.isscared = false
 			else
 				hp -= 1
 				pac.isdead = true
@@ -75,24 +78,20 @@ function update_ghost(ghost)
 		-- update possible moves
 		ghost.available = possible_moves(ghost)
 
-		
-		
-		if allscared then
-			--pick random direction
+		-- change the target depending on state
+		if ghost.iseaten then -- target is home
+			ghost.target = home
+			ghost.best = best_move(ghost)
+		elseif ghost.isscared then -- "target" is random
 			ghost.best = rnd(ghost.available)
 		else
-			-- move towards A target
-			if ghost.iseaten then
-				ghost.target = home
-			elseif global_state == states.chase then
-				update_target(ghost) -- pacman is target
+			if global_state == states.chase then -- target is pacman
+				update_target(ghost)
 			elseif global_state == states.scatter then
-				ghost.target = ghost.scatter -- go to scatter point
+				ghost.target = ghost.scatter -- target is scatter coord
 			end
-			-- update best move acording to target
 			ghost.best = best_move(ghost)
 		end
-
 		
 		-- reset counter
 		ghost.move_counter = 8
@@ -103,6 +102,35 @@ function update_ghost(ghost)
 	-- wrap around
 	ghost.x = ghost.x % 128
 	ghost.y = ghost.y % 128
+end
+
+function animate_ghost(ghost) 
+	ghost.anim_timer = ghost.anim_timer + 0.4
+
+	if ghost.iseaten then
+		ghost.sp = normal_g_sprite(ghost.lastmove, ghost.anim_timer)
+	else 
+		if ghost.isscared then
+			local base = 24
+			ghost.sp = base + (ghost.anim_timer % 2)
+		else 
+			ghost.sp = normal_g_sprite(ghost.lastmove, ghost.anim_timer)
+		end
+	end
+end
+
+function normal_g_sprite(dir, timer)
+	base_frame = 16
+	if dir[1] == 1 then -- right
+		base_frame = 16
+	elseif dir[1] == -1 then -- left
+		base_frame = 18
+	elseif dir[2] == 1 then -- down
+		base_frame = 20
+	elseif dir[2] == -1 then -- up
+		base_frame = 22
+	end
+	return base_frame + (timer % 2)
 end
 
 

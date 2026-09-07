@@ -35,13 +35,14 @@ function _update()
 		
 		if not pac.isdead then
 			update_pacman()
+			animate_pacman()
 			
 			-- scared timer
 			if allscared then
 				if scared_timer <= 0 then
 					allscared = false
 					for g in all(ghosts) do
-						g.sp = 16;
+						g.isscared = false
 					end
 				else
 					scared_timer -= 1
@@ -50,8 +51,9 @@ function _update()
 
 			for g in all(ghosts) do
 				update_ghost(g)
+				animate_ghost(g)
 			end
-			
+
 		else 
 			-- play death animation
 			if death_anim < 13.9 then

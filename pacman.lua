@@ -6,6 +6,9 @@ function init_pacman(x,y)
 		x = x,
 		y = y,
 		isdead = false,
+		anim_timer = 0,
+		fliph = false,
+		flipv = false,
 		sp = 2,
 		dx = 1,
 		dy = 0,
@@ -26,8 +29,8 @@ function update_pacman()
 		for g in all(ghosts) do
 			if not g.iseaten then 
 				allscared = true
+				g.isscared = true
 				scared_timer = 10 * 30 -- 10 seconds;
-				g.sp = 24
 			end
 		end
 		mset(pcellx, pcelly, 0)
@@ -66,7 +69,30 @@ function update_pacman()
 
 end
 
+function animate_pacman()
+	local  base_frame = 1
+	if pac.dx == 1 then -- right
+		base_frame = 1
+		pac.fliph = false
+		pac.anim_timer += 0.4
+	elseif pac.dx == -1 then -- left
+		base_frame = 1
+		pac.fliph = true
+		pac.anim_timer += 0.4
+	elseif pac.dy == 1 then -- down
+		base_frame = 4
+		pac.flipv = true
+		pac.anim_timer += 0.4
+	elseif pac.dy == -1 then -- up
+		base_frame = 4
+		pac.flipv = false
+		pac.anim_timer += 0.4
+	else 
+		pac.anim_timer = 1
+	end
+	pac.sp = base_frame + (pac.anim_timer % 3)
+end
 
 function draw_pacman()
-	spr(pac.sp,pac.x,pac.y)
+	spr(pac.sp,pac.x,pac.y,1,1,pac.fliph, pac.flipv)
 end
