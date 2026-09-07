@@ -7,17 +7,21 @@ gm = {
 }
 gamestate = gm.playing
 
+
+debug_mode = false
+
 function reload_map()
 	-- for a 128x128-tile map that can use all 256 sprite tiles
 	reload(0x2000, 0x2000, 0x2000)
 	-- https://pico-8.fandom.com/wiki/Reload
 end
+
 function _init()
 	-- reload map data
-	reload_map()
+	-- reload_map()
 	-- init entities
 	init_pacman(7*8,14*8)
-	init_ghost(ghosts[1],7*8,7*8)
+	init_ghost(ghosts[1],9*8,6*8)
 	init_ghost(ghosts[2],8*8,7*8)
 	init_ghost(ghosts[3],7*8,7*8)
 	init_ghost(ghosts[4],8*8,7*8)
@@ -25,14 +29,32 @@ end
 death_anim = 7
 function _update()
 	-- update entities
+	if btnp(❎) then
+		debug_mode = not debug_mode
+	end
 	if gamestate == gm.playing then
 		
 		if not pac.isdead then
 			update_pacman()
-			update_ghost(ghosts[1])
-			update_ghost(ghosts[2])
-			update_ghost(ghosts[3])
-			update_ghost(ghosts[4])
+			animate_pacman()
+			
+			-- scared timer
+			if allscared then
+				if scared_timer <= 0 then
+					allscared = false
+					for g in all(ghosts) do
+						g.isscared = false
+					end
+				else
+					scared_timer -= 1
+				end
+			end
+
+			for g in all(ghosts) do
+				update_ghost(g)
+				animate_ghost(g)
+			end
+
 		else 
 			-- play death animation
 			if death_anim < 13.9 then
@@ -72,6 +94,11 @@ function _draw()
 		print("gameover :(", 30,30)
 	end
 	-- draw points
+	color(7)
 	print("\^o0ffpoints: " ..points) 
 	print("\^o0ffhp: " ..hp) 
+	if debug_mode then
+		print("\^o0ffglobalst: " ..global_state)
+		if allscared then print("\^o0ffallscared: ") end
+	end
 end
