@@ -262,12 +262,14 @@ function draw_ghost(ghost)
 	end
 	
 	-- debug
-	-- show all availavle directions
-	for dir in all(ghost.available) do
-		pset(ghost.x + 4 + dir[1] * 8, ghost.y + 4 + dir[2] * 8, 8)
+	if debug_mode then
+		-- show all availavle directions
+		for dir in all(ghost.available) do
+			pset(ghost.x + 4 + dir[1] * 8, ghost.y + 4 + dir[2] * 8, 8)
+		end
+		-- show current best direction
+		pset(ghost.x+4+ghost.best[1]*8, ghost.y+4+ghost.best[2]*8,7)
+		-- show active target position
+		circfill(ghost.target.x, ghost.target.y, 1, ghost.c)
 	end
-	-- show current best direction
-	pset(ghost.x+4+ghost.best[1]*8, ghost.y+4+ghost.best[2]*8,7)
-	-- show active target position
-	circfill(ghost.target.x, ghost.target.y, 1, ghost.c)
 end

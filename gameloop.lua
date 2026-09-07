@@ -7,10 +7,8 @@ gm = {
 }
 gamestate = gm.playing
 
--- current_level=1
--- levels={
--- 	{}
--- }
+
+debug_mode = false
 
 function reload_map()
 	-- for a 128x128-tile map that can use all 256 sprite tiles
@@ -31,6 +29,9 @@ end
 death_anim = 7
 function _update()
 	-- update entities
+	if btnp(❎) then
+		debug_mode = not debug_mode
+	end
 	if gamestate == gm.playing then
 		
 		if not pac.isdead then
@@ -93,8 +94,11 @@ function _draw()
 		print("gameover :(", 30,30)
 	end
 	-- draw points
+	color(7)
 	print("\^o0ffpoints: " ..points) 
 	print("\^o0ffhp: " ..hp) 
-	print("\^o0ffglobalst: " ..global_state)
-	if allscared then print("\^o0ffallscared: ") end
+	if debug_mode then
+		print("\^o0ffglobalst: " ..global_state)
+		if allscared then print("\^o0ffallscared: ") end
+	end
 end
