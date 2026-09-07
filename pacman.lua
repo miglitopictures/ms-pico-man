@@ -6,6 +6,10 @@ function init_pacman(x,y)
 		x = x,
 		y = y,
 		isdead = false,
+		anim_timer = 0,
+		base_frame = 0,
+		fliph = false,
+		flipv = false,
 		sp = 2,
 		dx = 1,
 		dy = 0,
@@ -24,9 +28,10 @@ function update_pacman()
 	elseif is(pcellx, pcelly, bigdot) then
 		points += 50
 		for g in all(ghosts) do
-			if g.state != states.eaten then 
-				g.state = states.scared
-				g.sp = 24
+			if not g.iseaten then 
+				allscared = true
+				g.isscared = true
+				scared_timer = 10 * 30 -- 10 seconds;
 			end
 		end
 		mset(pcellx, pcelly, 0)
@@ -65,7 +70,33 @@ function update_pacman()
 
 end
 
+function animate_pacman()
+	if pac.dx == 1 then -- right
+		pac.base_frame = 1
+		pac.fliph = false
+		pac.flipv = false
+		pac.anim_timer += 0.4
+	elseif pac.dx == -1 then -- left
+		pac.base_frame = 1
+		pac.fliph = true
+		pac.flipv = false
+		pac.anim_timer += 0.4
+	elseif pac.dy == 1 then -- down
+		pac.base_frame = 4
+		pac.fliph = false
+		pac.flipv = true
+		pac.anim_timer += 0.4
+	elseif pac.dy == -1 then -- up
+		pac.base_frame = 4
+		pac.fliph = false
+		pac.flipv = false
+		pac.anim_timer += 0.4
+	else 
+		pac.anim_timer = 1
+	end
+	pac.sp = pac.base_frame + (pac.anim_timer % 3)
+end
 
 function draw_pacman()
-	spr(pac.sp,pac.x,pac.y)
+	spr(pac.sp,pac.x,pac.y,1,1,pac.fliph, pac.flipv)
 end
