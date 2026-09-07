@@ -4,6 +4,7 @@ __lua__
 #include ghosts.lua
 #include pacman.lua
 #include collisions.lua
+#include levels.lua
 #include gameloop.lua
 __gfx__
 0000000000aaaa0000aaaa0000aaaa00000000000000000000aaaa000000000000000000000000000000000000000000000000000a00a0000000000000000000

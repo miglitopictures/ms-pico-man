@@ -22,10 +22,12 @@ function update_pacman()
 	pcellx = flr((pac.x+4)/8)
 	pcelly = flr((pac.y+4)/8)
 	if is(pcellx, pcelly, dot) then
+		dots_left -= 1
 		points += 10
 		mset(pcellx, pcelly, 0)
 		sfx(0) -- needs sound design
 	elseif is(pcellx, pcelly, bigdot) then
+		dots_left -= 1
 		points += 50
 		for g in all(ghosts) do
 			if not g.iseaten then 

@@ -1,3 +1,4 @@
+lvl = 1
 points = 0
 hp = 3
 gm = {
@@ -6,6 +7,8 @@ gm = {
 	over = 2,
 }
 gamestate = gm.playing
+dots_left = 86
+
 
 
 debug_mode = false
@@ -17,6 +20,9 @@ function reload_map()
 end
 
 function _init()
+	mode_counter = 0
+	mode_phase = 1
+	mode_time = cfg_lookup(cfgs.mode_time, lvl)
 	-- reload map data
 	-- reload_map()
 	-- init entities
@@ -37,6 +43,17 @@ function _update()
 		if not pac.isdead then
 			update_pacman()
 			animate_pacman()
+
+			-- global state counter (mode_counter)
+			if mode_phase <= 7 then
+				if mode_counter/30 <= mode_time[mode_phase] then
+					mode_counter += 1
+				else
+					mode_counter = 0
+					mode_phase += 1
+					global_state = (global_state==states.chase) and states.scatter or states.chase
+				end
+			end
 			
 			-- scared timer
 			if allscared then
@@ -96,9 +113,14 @@ function _draw()
 	-- draw points
 	color(7)
 	print("\^o0ffpoints: " ..points) 
+	print("\^o0ffdotsleft: " ..dots_left) 
 	print("\^o0ffhp: " ..hp) 
 	if debug_mode then
-		print("\^o0ffglobalst: " ..global_state)
+		if global_state == states.chase then
+			print("\^o0ffchase :" ..flr(mode_counter/30))
+		else
+			print("\^o0ffscatter :" ..flr(mode_counter/30))
+		end
 		if allscared then print("\^o0ffallscared: ") end
 	end
 end

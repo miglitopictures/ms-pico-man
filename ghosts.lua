@@ -11,13 +11,13 @@ states = {
 	scatter = 0,
 	chase = 1,
 }
-global_state = states.chase
+global_state = states.scatter
 allscared = false
 scared_timer = 10 * 30 -- 10 seconds
 
 home = { x = 63, y = 63}
 ghosts = {
-    {name = "blinky", c=8, scatter = {x=0,y=0}}, -- red
+	{name = "blinky", c=8, scatter = {x=0,y=0}}, -- red
     {name = "pinky",  c=14,scatter = {x=0,y=128}}, -- pink
     {name = "inky",   c=12,scatter = {x=128,y=128}}, -- blue
     {name = "clyde",  c=9, scatter = {x=128,y=0}}  -- orange
@@ -41,7 +41,8 @@ function init_ghost(ghost, x, y)
 	ghost.lastmove={0,0}
 	
 	ghost.move_counter=8
-
+	
+	global_state = states.scatter
 
 	ghost.anim_timer = 0;
 	
