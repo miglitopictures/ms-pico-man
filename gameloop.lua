@@ -2,8 +2,10 @@ points = 0
 hp = 3
 gm = {
 	intro = 0,
-	playing = 1,
-	over = 2,
+	readying = 1,	        -- ready? 
+	playing = 2, 	    -- in play
+	won = 3, -- between levels
+	over = 4, 		    -- if lost (save score)
 }
 gamestate = gm.playing
 dots_left = 84
@@ -79,6 +81,7 @@ function _update()
 			if death_anim < 13.9 then
 				death_anim = death_anim + 0.1
 			else 
+				hp -= 1
 				if hp == 0 then
 					-- game over
 					gamestate = gm.over
@@ -108,6 +111,11 @@ function _draw()
 		draw_ghost(ghosts[3])
 		draw_ghost(ghosts[4])
 		draw_pacman()
+
+		-- draw ui
+		for i = 0, hp - 1, 1 do
+			spr(2, (128 - 8), (128 - 8) - (9 * i))
+		end
 	
 	else 
 		print("gameover :(", 30,30)
@@ -115,9 +123,7 @@ function _draw()
 	-- draw points
 	color(7)
 	print("\^o0ffpoints: " ..points, 2, 2) 
-	print("\^o0ffdotsleft: " ..dots_left) 
-	print("\^o0ffhp: " ..hp) 
-	if debug_mode then
+ 		if debug_mode then
 		if global_state == states.chase then
 			print("\^o0ffchase :" ..flr(mode_counter/30))
 		else
