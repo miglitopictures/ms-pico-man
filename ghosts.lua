@@ -115,8 +115,9 @@ function update_ghost(ghost)
 	ghost.accumulator += ghost.spd
 	
 	-- wrap around
-	ghost.x = ghost.x % 128
-	ghost.y = ghost.y % 128
+	wrap_around(ghost)
+	-- ghost.x = ghost.x % 128
+	-- ghost.y = ghost.y % 128
 end
 
 function animate_ghost(ghost) 

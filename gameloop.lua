@@ -6,7 +6,7 @@ gm = {
 	over = 2,
 }
 gamestate = gm.playing
-dots_left = 86
+dots_left = 84
 
 max_speed = 1
 
@@ -125,4 +125,10 @@ function _draw()
 		end
 		if allscared then print("\^o0ffallscared: ") end
 	end
+end
+
+
+function wrap_around(pos)
+	pos.x = pos.x % (128 - 16)
+	pos.y = pos.y % 128
 end

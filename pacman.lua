@@ -81,8 +81,9 @@ function update_pacman()
 	pac.accm += pac.spd
 
 	-- wrap around
-	pac.x = pac.x % 128
-	pac.y = pac.y % 128
+	wrap_around(pac)
+	-- pac.x = pac.x % 128
+	-- pac.y = pac.y % 128
 
 end
 
