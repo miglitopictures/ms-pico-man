@@ -11,16 +11,16 @@ states = {
 	scatter = 0,
 	chase = 1,
 }
-global_state = states.chase
+global_state = states.scatter
 allscared = false
-scared_timer = 10 * 30 -- 10 seconds
+scared_timer = 0 -- 10 seconds
 
 home = { x = (7*8), y = (8*8)}
 ghosts = {
-    {name = "blinky", c=8, scatter = {x=0,y=0}}, -- red
-    {name = "pinky",  c=14,scatter = {x=0,y=128}}, -- pink
+	{name = "blinky", c=8, scatter = {x=0,y=0}},     -- red
+    {name = "pinky",  c=14,scatter = {x=0,y=128}},   -- pink
     {name = "inky",   c=12,scatter = {x=128,y=128}}, -- blue
-    {name = "clyde",  c=9, scatter = {x=128,y=0}}  -- orange
+    {name = "clyde",  c=9, scatter = {x=128,y=0}}    -- orange
 }
 
 -- sets up the ghost entity in specified coordinate --
@@ -28,6 +28,9 @@ function init_ghost(ghost, x, y)
 	-- set inital position
 	ghost.x = x
 	ghost.y = y
+
+	ghost.spd = cfg_lookup(cfgs.g, lvl).spd
+	ghost.accumulator = 0
 	
 	-- set inital possible moves set
 	ghost.available={}
@@ -40,9 +43,8 @@ function init_ghost(ghost, x, y)
 	ghost.best={0,0}
 	ghost.lastmove={0,0}
 	
-	ghost.move_counter=8
-
-
+	ghost.move_counter = 8
+	
 	ghost.anim_timer = 0;
 	
 
@@ -58,52 +60,63 @@ function update_ghost(ghost)
 	if ghost.iseaten then
 		if dist(ghost, home) <=  4 then 
 			ghost.iseaten = false
+			ghost.spd = cfg_lookup(cfgs.g, lvl).spd
 		end
 	else
 		-- collided with pacman
 		if (not pac.isdead) and (dist(ghost, pac) <  4) then
 			if ghost.isscared then 
 				ghost.iseaten = true
+				ghost.spd = cfg_lookup(cfgs.g, lvl).fspd * 2
 				ghost.isscared = false
+				sfx(2)
 			else
-				hp -= 1
 				pac.isdead = true
 				pac.fliph = false
 				pac.flipv = false
+				sfx(3)
 			end
 		end
 	end
 
-	-- calculate movement
-	-- if ghost can change direction
-	if ghost.move_counter == 0 then
-		-- update possible moves
-		ghost.available = possible_moves(ghost)
-
-		-- change the target depending on state
-		if ghost.iseaten then -- target is home
-			ghost.target = home
-			ghost.best = best_move(ghost)
-		elseif ghost.isscared then -- "target" is random
-			ghost.best = rnd(ghost.available)
-		else
-			if global_state == states.chase then -- target is pacman
-				update_target(ghost)
-			elseif global_state == states.scatter then
-				ghost.target = ghost.scatter -- target is scatter coord
+	
+	
+	while ghost.accumulator >= 100/max_speed do
+		ghost.accumulator -= 100/max_speed
+		-- calculate movement
+		-- if ghost can change direction
+		if ghost.move_counter == 0 then
+			-- update possible moves
+			ghost.available = possible_moves(ghost)
+	
+			-- change the target depending on state
+			if ghost.iseaten then -- target is home
+				ghost.target = home
+				ghost.best = best_move(ghost)
+			elseif ghost.isscared then -- "target" is random
+				ghost.best = rnd(ghost.available)
+			else
+				if global_state == states.chase then -- target is pacman
+					update_target(ghost)
+				elseif global_state == states.scatter then
+					ghost.target = ghost.scatter -- target is scatter coord
+				end
+				ghost.best = best_move(ghost)
 			end
-			ghost.best = best_move(ghost)
+			
+			-- reset counter
+			ghost.move_counter = 8
 		end
 		
-		-- reset counter
-		ghost.move_counter = 8
+		move_ghost(ghost)
 	end
-	
-	move_ghost(ghost)
+
+	ghost.accumulator += ghost.spd
 	
 	-- wrap around
-	ghost.x = ghost.x % 128
-	ghost.y = ghost.y % 128
+	wrap_around(ghost)
+	-- ghost.x = ghost.x % 128
+	-- ghost.y = ghost.y % 128
 end
 
 function animate_ghost(ghost) 
@@ -139,8 +152,8 @@ end
 -- moves ghost in current best direction, and updates the its move_counter
 function move_ghost(ghost)
 	-- update position
-	ghost.x+=ghost.best[1]
-	ghost.y+=ghost.best[2]
+	ghost.x += ghost.best[1]
+	ghost.y += ghost.best[2]
 	-- save last move
 	ghost.lastmove = ghost.best
 	-- update move counter
@@ -271,5 +284,7 @@ function draw_ghost(ghost)
 		pset(ghost.x+4+ghost.best[1]*8, ghost.y+4+ghost.best[2]*8,7)
 		-- show active target position
 		circfill(ghost.target.x, ghost.target.y, 1, ghost.c)
+		print(ghost.spd, ghost.x, ghost.y - 4, 7)
 	end
+
 end
