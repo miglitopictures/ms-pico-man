@@ -1,4 +1,3 @@
-lvl = 1
 points = 0
 hp = 3
 gm = {
@@ -9,7 +8,7 @@ gm = {
 gamestate = gm.playing
 dots_left = 86
 
-max_speed = 2
+max_speed = 1
 
 debug_mode = false
 

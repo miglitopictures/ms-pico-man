@@ -15,7 +15,8 @@ function init_pacman(x,y)
 		dy = 0,
 		desired = {1,0},
 		spd = cfg_lookup(cfgs.p, lvl).spd,
-		accm = 0
+		accm = 0,
+		move_counter = 8
 	}
 end
 -- updates pacman position
@@ -37,15 +38,13 @@ function update_pacman()
 				allscared = true
 				g.isscared = true
 				g.spd = cfg_lookup(cfgs.g, lvl).fspd
-				scared_timer = 10 * 30 -- 10 seconds;
+				scared_timer = cfg_lookup(cfgs.fright, lvl) * 30;
 			end
 		end
 		mset(pcellx, pcelly, 0)
 		sfx(1) -- needs sound design
 	end
 
-	-- can move if is on the grid
-	local ingrid = (pac.x + pac.y) % 8 == 0
 
 	-- get user input for desired direction
 	if btn(⬅️) then pac.desired = {-1,0} end
@@ -53,25 +52,30 @@ function update_pacman()
 	if btn(➡️) then pac.desired = {1, 0} end
 	if btn(⬇️) then pac.desired = {0, 1} end
 
-	if ingrid then
-		-- if wanted is ok
-		if not is_solid(flr(pac.x / 8) + pac.desired[1], flr(pac.y / 8) + pac.desired[2]) then
-			-- lets go there!
-			pac.dx = pac.desired[1]
-			pac.dy = pac.desired[2]
-		-- else if cannot continue
-		elseif is_solid(flr(pac.x / 8) + pac.dx, flr(pac.y / 8) + pac.dy) then
-			-- we stop!
-			pac.dx = 0
-			pac.dy = 0
-		end	
-	end
+	
+	
+	while pac.accm >= 100/max_speed do
+		pac.accm -= 100/max_speed
 
-	if pac.accm >= 100 then
-		pac.accm -= 100
+		if pac.move_counter <= 0 then
+		-- if wanted is ok
+			if not is_solid(flr(pac.x / 8) + pac.desired[1], flr(pac.y / 8) + pac.desired[2]) then
+				-- lets go there!
+				pac.dx = pac.desired[1]
+				pac.dy = pac.desired[2]
+				-- else if cannot continue
+			elseif is_solid(flr(pac.x / 8) + pac.dx, flr(pac.y / 8) + pac.dy) then
+				-- we stop!
+				pac.dx = 0
+				pac.dy = 0
+			end	
+			pac.move_counter = 8
+		end
 		
-		pac.x += pac.dx * max_speed
-		pac.y += pac.dy * max_speed
+		-- move pacman
+		pac.x += pac.dx
+		pac.y += pac.dy
+		pac.move_counter -= 1
 	end
 
 	pac.accm += pac.spd

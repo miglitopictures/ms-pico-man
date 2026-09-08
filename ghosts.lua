@@ -13,7 +13,7 @@ states = {
 }
 global_state = states.scatter
 allscared = false
-scared_timer = 10 * 30 -- 10 seconds
+scared_timer = 0 -- 10 seconds
 
 home = { x = 63, y = 63}
 ghosts = {
@@ -43,7 +43,7 @@ function init_ghost(ghost, x, y)
 	ghost.best={0,0}
 	ghost.lastmove={0,0}
 	
-	ghost.move_counter=8
+	ghost.move_counter = 8
 	
 	global_state = states.scatter
 
@@ -80,34 +80,35 @@ function update_ghost(ghost)
 		end
 	end
 
-	-- calculate movement
-	-- if ghost can change direction
-	if ghost.move_counter == 0 then
-		-- update possible moves
-		ghost.available = possible_moves(ghost)
-
-		-- change the target depending on state
-		if ghost.iseaten then -- target is home
-			ghost.target = home
-			ghost.best = best_move(ghost)
-		elseif ghost.isscared then -- "target" is random
-			ghost.best = rnd(ghost.available)
-		else
-			if global_state == states.chase then -- target is pacman
-				update_target(ghost)
-			elseif global_state == states.scatter then
-				ghost.target = ghost.scatter -- target is scatter coord
+	
+	
+	while ghost.accumulator >= 100/max_speed do
+		ghost.accumulator -= 100/max_speed
+		-- calculate movement
+		-- if ghost can change direction
+		if ghost.move_counter == 0 then
+			-- update possible moves
+			ghost.available = possible_moves(ghost)
+	
+			-- change the target depending on state
+			if ghost.iseaten then -- target is home
+				ghost.target = home
+				ghost.best = best_move(ghost)
+			elseif ghost.isscared then -- "target" is random
+				ghost.best = rnd(ghost.available)
+			else
+				if global_state == states.chase then -- target is pacman
+					update_target(ghost)
+				elseif global_state == states.scatter then
+					ghost.target = ghost.scatter -- target is scatter coord
+				end
+				ghost.best = best_move(ghost)
 			end
-			ghost.best = best_move(ghost)
+			
+			-- reset counter
+			ghost.move_counter = 8
 		end
 		
-		-- reset counter
-		ghost.move_counter = 8
-	end
-	
-
-	if ghost.accumulator >= 100 then
-		ghost.accumulator -= 100
 		move_ghost(ghost)
 	end
 
@@ -151,8 +152,8 @@ end
 -- moves ghost in current best direction, and updates the its move_counter
 function move_ghost(ghost)
 	-- update position
-	ghost.x += (ghost.best[1]*max_speed)
-	ghost.y += (ghost.best[2]*max_speed)
+	ghost.x += ghost.best[1]
+	ghost.y += ghost.best[2]
 	-- save last move
 	ghost.lastmove = ghost.best
 	-- update move counter

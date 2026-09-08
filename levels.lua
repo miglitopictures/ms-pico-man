@@ -1,4 +1,4 @@
-lvl = 1
+lvl = 21
 
 f = {
 	cherries = { sp = 32, bonus = 100 },
@@ -28,15 +28,15 @@ cfgs = {
         [13] = f.key,       -- 13+
     },
     p = {
-        [1] = {spd = 80, fspd = 90},
-        [2] = {spd = 90, fspd = 95},   -- 03 to 04
-        [5] = {spd = 100, fspd = 100}, -- 05 to 20
-        [21] = {spd = 90, fspd = 90},  -- 21+
+        [1] = {spd = 100, fspd = 105},
+        [2] = {spd = 130, fspd = 110},   -- 03 to 04
+        [5] = {spd = 160, fspd = 165}, -- 05 to 20
+        [21] = {spd = 130, fspd = 110},  -- 21+
     },
     g = {
-        [1] = {spd = 75, fspd = 50, tnlspd = 40},
-        [2] = {spd = 85, fspd = 55, tnlspd = 45}, -- 2 to 4
-        [5] = {spd = 95, fspd = 60, tnlspd = 50}, -- 5+
+        [1] = {spd = 90, fspd = 70, tnlspd = 40},
+        [2] = {spd = 100, fspd = 80, tnlspd = 45}, -- 2 to 4
+        [5] = {spd = 160, fspd = 130, tnlspd = 50}, -- 5+
     },
     elroy = {
         dt_left = {
@@ -70,14 +70,14 @@ cfgs = {
         [12] = 1, -- 12 and 13
         [14] = 3,
         [15] = 1, -- 15 and 16
-        [17] = 0,
+        [17] = 0.2,
         [18] = 1,
-        [19] = 0  -- 19 +
+        [19] = 0.2  -- 19 +
     },
 }
 
 function cfg_lookup(t, lvl)
     for l = lvl, 1, -1 do
-        if t then return t[l] end
+        if t[l] then return t[l] end
     end
 end
