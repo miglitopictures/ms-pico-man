@@ -71,10 +71,12 @@ function update_ghost(ghost)
 				ghost.iseaten = true
 				ghost.spd = cfg_lookup(cfgs.g, lvl).fspd * 2
 				ghost.isscared = false
+				sfx(2)
 			else
 				pac.isdead = true
 				pac.fliph = false
 				pac.flipv = false
+				sfx(3)
 			end
 		end
 	end

@@ -32,6 +32,7 @@ function _init()
 	init_ghost(ghosts[2],8*8,8*8)
 	init_ghost(ghosts[3],7*8,8*8)
 	init_ghost(ghosts[4],8*8,8*8)
+	-- sfx(4)
 end
 death_anim = 7
 function _update()
