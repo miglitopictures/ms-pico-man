@@ -45,8 +45,6 @@ function init_ghost(ghost, x, y)
 	
 	ghost.move_counter = 8
 	
-	global_state = states.scatter
-
 	ghost.anim_timer = 0;
 	
 

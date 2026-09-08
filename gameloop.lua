@@ -14,6 +14,9 @@ max_speed = 1
 
 debug_mode = false
 
+mode_phase = 1
+mode_counter = 0
+
 function reload_map()
 	-- for a 128x128-tile map that can use all 256 sprite tiles
 	reload(0x2000, 0x2000, 0x2000)
@@ -21,11 +24,9 @@ function reload_map()
 end
 
 function _init()
-	mode_counter = 0
-	mode_phase = 1
+	-- mode_phase = 1
 	mode_time = cfg_lookup(cfgs.mode_time, lvl)
 	-- reload map data
-	-- reload_map()
 	-- init entities
 	init_pacman(7*8,14*8)
 	init_ghost(ghosts[1],8*8,6*8)
@@ -35,14 +36,37 @@ function _init()
 	-- sfx(4)
 end
 death_anim = 7
+win_timer = 30
 function _update()
 	-- update entities
 	if btnp(❎) then
 		debug_mode = not debug_mode
 	end
-	if gamestate == gm.playing then
+	
+	-- check dots left
+	
+	if gamestate == gm.won then
+		if win_timer == 0 then
+			win_timer = 30
+			gamestate = gm.playing
+			reload_map()
+			mode_phase = 1
+			mode_counter = 0
+			_init()
+		else 
+			win_timer -= 1
+		end
+	elseif gamestate == gm.playing then
 		
+		if dots_left == 0 then
+			gamestate = gm.won
+			dots_left = 84
+			hp = 3
+			lvl += 1
+		end
+
 		if not pac.isdead then
+
 
 			-- global state counter (mode_counter)
 			if mode_phase <= 7 then
@@ -102,7 +126,9 @@ end
 
 function _draw()
 	cls() -- clear the screen
-	if gamestate == gm.playing then
+	if gamestate == gm.won then
+		print("lvl:" ..lvl, 30,30)
+	elseif gamestate == gm.playing then
 	
 		map() -- draw map
 		
@@ -118,8 +144,9 @@ function _draw()
 			spr(2, (128 - 8), (128 - 8) - (9 * i))
 		end
 	
-	else 
+	elseif gamestate == gm.over then
 		print("gameover :(", 30,30)
+		print("lvl:" ..lvl)
 	end
 	-- draw points
 	color(7)
