@@ -15,7 +15,7 @@ global_state = states.chase
 allscared = false
 scared_timer = 10 * 30 -- 10 seconds
 
-home = { x = 63, y = 63}
+home = { x = (7*8), y = (8*8)}
 ghosts = {
     {name = "blinky", c=8, scatter = {x=0,y=0}}, -- red
     {name = "pinky",  c=14,scatter = {x=0,y=128}}, -- pink
