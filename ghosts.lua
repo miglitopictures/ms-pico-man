@@ -28,7 +28,9 @@ function init_ghost(ghost, x, y)
 	-- set inital position
 	ghost.x = x
 	ghost.y = y
+
 	ghost.spd = cfg_lookup(cfgs.g, lvl).spd
+	ghost.accumulator = 0
 	
 	-- set inital possible moves set
 	ghost.available={}
@@ -103,7 +105,13 @@ function update_ghost(ghost)
 		ghost.move_counter = 8
 	end
 	
-	move_ghost(ghost)
+
+	if ghost.accumulator >= 100 then
+		ghost.accumulator -= 100
+		move_ghost(ghost)
+	end
+
+	ghost.accumulator += ghost.spd
 	
 	-- wrap around
 	ghost.x = ghost.x % 128
@@ -143,8 +151,8 @@ end
 -- moves ghost in current best direction, and updates the its move_counter
 function move_ghost(ghost)
 	-- update position
-	ghost.x+=ghost.best[1]
-	ghost.y+=ghost.best[2]
+	ghost.x += (ghost.best[1]*max_speed)
+	ghost.y += (ghost.best[2]*max_speed)
 	-- save last move
 	ghost.lastmove = ghost.best
 	-- update move counter

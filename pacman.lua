@@ -14,7 +14,8 @@ function init_pacman(x,y)
 		dx = 1,
 		dy = 0,
 		desired = {1,0},
-		spd = cfg_lookup(cfgs.p, lvl).spd
+		spd = cfg_lookup(cfgs.p, lvl).spd,
+		accm = 0
 	}
 end
 -- updates pacman position
@@ -44,7 +45,7 @@ function update_pacman()
 	end
 
 	-- can move if is on the grid
-	local canmove = (pac.x + pac.y) % 8 == 0
+	local ingrid = (pac.x + pac.y) % 8 == 0
 
 	-- get user input for desired direction
 	if btn(⬅️) then pac.desired = {-1,0} end
@@ -52,7 +53,7 @@ function update_pacman()
 	if btn(➡️) then pac.desired = {1, 0} end
 	if btn(⬇️) then pac.desired = {0, 1} end
 
-	if canmove then
+	if ingrid then
 		-- if wanted is ok
 		if not is_solid(flr(pac.x / 8) + pac.desired[1], flr(pac.y / 8) + pac.desired[2]) then
 			-- lets go there!
@@ -66,9 +67,15 @@ function update_pacman()
 		end	
 	end
 
-	pac.x += pac.dx
-	pac.y += pac.dy
-	
+	if pac.accm >= 100 then
+		pac.accm -= 100
+		
+		pac.x += pac.dx * max_speed
+		pac.y += pac.dy * max_speed
+	end
+
+	pac.accm += pac.spd
+
 	-- wrap around
 	pac.x = pac.x % 128
 	pac.y = pac.y % 128

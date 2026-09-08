@@ -9,7 +9,7 @@ gm = {
 gamestate = gm.playing
 dots_left = 86
 
-
+max_speed = 2
 
 debug_mode = false
 

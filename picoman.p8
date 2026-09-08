@@ -1,7 +1,8 @@
 pico-8 cartridge // http://www.pico-8.com
 version 43
 __lua__
-#include smallcaps.lua
+-- picoman
+-- by miglito e vick
 
 #include ghosts.lua
 #include pacman.lua
