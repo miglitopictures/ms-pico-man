@@ -1,4 +1,4 @@
-lvl = 21
+lvl = 1
 
 f = {
 	cherries = { sp = 32, bonus = 100 },

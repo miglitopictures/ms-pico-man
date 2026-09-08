@@ -69,7 +69,7 @@ function update_ghost(ghost)
 		if (not pac.isdead) and (dist(ghost, pac) <  4) then
 			if ghost.isscared then 
 				ghost.iseaten = true
-				ghost.spd = 100
+				ghost.spd = cfg_lookup(cfgs.g, lvl).fspd * 2
 				ghost.isscared = false
 			else
 				hp -= 1
