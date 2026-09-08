@@ -76,8 +76,8 @@ cfgs = {
     },
 }
 
-function cfg_lookup(table, lvl)
+function cfg_lookup(t, lvl)
     for l = lvl, 1, -1 do
-        if table[l] then return table[l] end
+        if t then return t[l] end
     end
 end

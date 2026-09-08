@@ -14,6 +14,7 @@ function init_pacman(x,y)
 		dx = 1,
 		dy = 0,
 		desired = {1,0},
+		spd = cfg_lookup(cfgs.p, lvl).spd
 	}
 end
 -- updates pacman position
@@ -28,11 +29,13 @@ function update_pacman()
 		sfx(0) -- needs sound design
 	elseif is(pcellx, pcelly, bigdot) then
 		dots_left -= 1
+		pac.spd = cfg_lookup(cfgs.p, lvl).fspd
 		points += 50
 		for g in all(ghosts) do
 			if not g.iseaten then 
 				allscared = true
 				g.isscared = true
+				g.spd = cfg_lookup(cfgs.g, lvl).fspd
 				scared_timer = 10 * 30 -- 10 seconds;
 			end
 		end
@@ -101,4 +104,7 @@ end
 
 function draw_pacman()
 	spr(pac.sp,pac.x,pac.y,1,1,pac.fliph, pac.flipv)
+	if debug_mode then
+		print(pac.spd, pac.x, pac.y - 4, 7)
+	end
 end

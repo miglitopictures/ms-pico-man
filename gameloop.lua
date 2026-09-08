@@ -41,8 +41,6 @@ function _update()
 	if gamestate == gm.playing then
 		
 		if not pac.isdead then
-			update_pacman()
-			animate_pacman()
 
 			-- global state counter (mode_counter)
 			if mode_phase <= 7 then
@@ -59,13 +57,18 @@ function _update()
 			if allscared then
 				if scared_timer <= 0 then
 					allscared = false
+					pac.spd = cfg_lookup(cfgs.p, lvl).spd
 					for g in all(ghosts) do
 						g.isscared = false
+						if not g.iseaten then g.spd = cfg_lookup(cfgs.g, lvl).spd end
 					end
 				else
 					scared_timer -= 1
 				end
 			end
+
+			update_pacman()
+			animate_pacman()
 
 			for g in all(ghosts) do
 				update_ghost(g)
@@ -112,7 +115,7 @@ function _draw()
 	end
 	-- draw points
 	color(7)
-	print("\^o0ffpoints: " ..points) 
+	print("\^o0ffpoints: " ..points, 2, 2) 
 	print("\^o0ffdotsleft: " ..dots_left) 
 	print("\^o0ffhp: " ..hp) 
 	if debug_mode then

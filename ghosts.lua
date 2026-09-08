@@ -17,10 +17,10 @@ scared_timer = 10 * 30 -- 10 seconds
 
 home = { x = 63, y = 63}
 ghosts = {
-	{name = "blinky", c=8, scatter = {x=0,y=0}}, -- red
-    {name = "pinky",  c=14,scatter = {x=0,y=128}}, -- pink
+	{name = "blinky", c=8, scatter = {x=0,y=0}},     -- red
+    {name = "pinky",  c=14,scatter = {x=0,y=128}},   -- pink
     {name = "inky",   c=12,scatter = {x=128,y=128}}, -- blue
-    {name = "clyde",  c=9, scatter = {x=128,y=0}}  -- orange
+    {name = "clyde",  c=9, scatter = {x=128,y=0}}    -- orange
 }
 
 -- sets up the ghost entity in specified coordinate --
@@ -28,6 +28,7 @@ function init_ghost(ghost, x, y)
 	-- set inital position
 	ghost.x = x
 	ghost.y = y
+	ghost.spd = cfg_lookup(cfgs.g, lvl).spd
 	
 	-- set inital possible moves set
 	ghost.available={}
@@ -59,12 +60,14 @@ function update_ghost(ghost)
 	if ghost.iseaten then
 		if dist(ghost, home) <=  4 then 
 			ghost.iseaten = false
+			ghost.spd = cfg_lookup(cfgs.g, lvl).spd
 		end
 	else
 		-- collided with pacman
 		if (not pac.isdead) and (dist(ghost, pac) <  4) then
 			if ghost.isscared then 
 				ghost.iseaten = true
+				ghost.spd = 100
 				ghost.isscared = false
 			else
 				hp -= 1
@@ -272,5 +275,7 @@ function draw_ghost(ghost)
 		pset(ghost.x+4+ghost.best[1]*8, ghost.y+4+ghost.best[2]*8,7)
 		-- show active target position
 		circfill(ghost.target.x, ghost.target.y, 1, ghost.c)
+		print(ghost.spd, ghost.x, ghost.y - 4, 7)
 	end
+
 end
