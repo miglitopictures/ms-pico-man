@@ -2,9 +2,9 @@ points = 0
 hp = 3
 gm = {
 	intro = 0,
-	readying = 1,	        -- ready? 
+	readying = 1,	    -- ready? 
 	playing = 2, 	    -- in play
-	won = 3, -- between levels
+	won = 3,            -- between levels
 	over = 4, 		    -- if lost (save score)
 }
 gamestate = gm.playing
@@ -29,10 +29,10 @@ function _init()
 	-- reload map data
 	-- init entities
 	init_pacman(7*8,14*8)
-	init_ghost(ghosts[1],8*8,6*8)
-	init_ghost(ghosts[2],8*8,8*8)
+	init_ghost(ghosts[1],7*8,6*8)
+	init_ghost(ghosts[2],7*8,8*8)
 	init_ghost(ghosts[3],7*8,8*8)
-	init_ghost(ghosts[4],8*8,8*8)
+	init_ghost(ghosts[4],7*8,8*8)
 	-- sfx(4)
 end
 death_anim = 7

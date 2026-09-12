@@ -1,3 +1,5 @@
+-- level configuration lookup tables
+
 lvl = 1
 
 f = {
